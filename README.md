@@ -1,8 +1,17 @@
-﻿# Tower Builder
+# Tower Builder
 
-A local Python and HTML demo for the Achilles rehabilitation game and physician portal. The browser simulates heel height and lowering time. The server records sessions in SQLite and ships with fictional sample history.
+A demo for the Achilles rehabilitation game and physician portal. The browser simulates heel height and lowering time and the portal includes fictional sample history.
 
-## Run
+## Host on GitHub Pages
+
+1. Commit these files and push them to the repository's `main` branch.
+2. In GitHub, open **Settings ? Pages**. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. In **Actions**, open **Deploy Tower Builder to GitHub Pages** and select **Run workflow** on `main`. Subsequent pushes to `main` run it automatically.
+4. After deployment, open the link in **Settings ? Pages**. The game is the home page, and **Physician portal** opens the dashboard.
+
+The hosted version saves simulated sessions in the browser on the device that played the game. The portal on that browser can review them. Other browsers and devices show their own sessions and the fictional sample history. Use fictional data only.
+
+## Run locally with Python
 
 Requires Python 3. No packages to install.
 

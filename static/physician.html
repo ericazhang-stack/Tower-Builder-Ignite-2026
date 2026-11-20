@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Physician portal | Tower Builder</title>
-<link rel="stylesheet" href="/style.css">
-<script src="/portal.js" defer></script>
+<link rel="stylesheet" href="./style.css">
+<script src="./demo-data.js" defer></script>
+<script src="./portal.js" defer></script>
 </head>
 <body class="portal-page">
-<header class="nav"><a class="brand" href="/">▰ <span>Tower Builder</span></a><nav aria-label="Main"><a href="/">Play</a><a aria-current="page" href="/physician">Physician portal</a></nav><span class="demo">Simulation demo</span></header>
+<header class="nav"><a class="brand" href="./">▰ <span>Tower Builder</span></a><nav aria-label="Main"><a href="./">Play</a><a aria-current="page" href="./physician.html">Physician portal</a></nav><span class="demo">Simulation demo</span></header>
 <main class="portal-shell">
-<div class="portal-title"><div><p class="eyebrow">PHYSICIAN PORTAL</p><h1>Rehabilitation progress</h1><p>Fictional patient · Sample history and saved simulator sessions</p></div>
+<div class="portal-title"><div><p class="eyebrow">PHYSICIAN PORTAL</p><h1>Rehabilitation progress</h1><p>Fictional patient · Sample history and saved simulator sessions</p><p id="storage-note" hidden>Simulator sessions are visible only in the browser that saved them.</p></div>
 <button id="refresh" class="secondary">Refresh data</button></div>
 <div class="filters"><label>Time range <select id="range"><option value="all">All sessions</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></label>
 <label>Source <select id="source"><option value="all">All sources</option><option value="sim">Simulator</option><option value="sample">Sample history</option></select></label>

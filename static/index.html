@@ -4,11 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tower Builder</title>
-<link rel="stylesheet" href="/style.css">
-<script src="/game.js" defer></script>
+<link rel="stylesheet" href="./style.css">
+<script src="./demo-data.js" defer></script>
+<script src="./game.js" defer></script>
 </head>
 <body class="game-page">
-<header class="nav"><a class="brand" href="/">▰ <span>Tower Builder</span></a><nav aria-label="Main"><a aria-current="page" href="/">Play</a><a href="/physician">Physician portal</a></nav><span class="demo">Simulation demo</span></header>
+<header class="nav"><a class="brand" href="./">▰ <span>Tower Builder</span></a><nav aria-label="Main"><a aria-current="page" href="./">Play</a><a href="./physician.html">Physician portal</a></nav><span class="demo">Simulation demo</span></header>
 <main class="game-shell">
 <section class="stage" aria-label="Tower Builder game">
 <canvas id="scene" width="1200" height="660" aria-hidden="true"></canvas>
@@ -31,6 +32,7 @@
 <button id="raise" disabled>↑ Raise</button><button id="lower" disabled>↓ Hold to lower</button><button id="simulate" disabled>Auto rep</button>
 <label class="scenario">Rep scenario<select id="scenario"><option value="target">On target</option><option value="fast">Too fast</option><option value="low">Low height</option><option value="slow">Too slow</option></select></label>
 </div>
+<p id="storage-note" hidden>Sessions are saved in this browser on this device.</p>
 <form id="save-form"><label>Demo pain score <select id="pain"><option value="">Not entered</option></select></label><button id="save" disabled>Save session</button><button id="next" type="button" hidden>Next level</button><p id="save-status" role="status"></p></form>
 </section>
 </main>

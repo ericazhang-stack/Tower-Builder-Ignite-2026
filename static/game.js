@@ -34,13 +34,66 @@ function hill(y, color, offset) {
   ctx.fillStyle = color;
   ctx.fill();
 }
-function block(x, y, w, h, color, crooked = false) {
+const towerCenter = 650;
+const platformTop = 581;
+const blockHeight = 26;
+const profiles = [
+  null, // Arched base
+  [[-.34, 0], [.34, 0], [.5, 1], [-.5, 1]],
+  [[-.25, 0], [.25, 0], [.25, .45], [.5, .45], [.5, 1], [-.5, 1], [-.5, .45], [-.25, .45]],
+  [[-.37, 0], [.37, 0], [.5, .5], [.37, 1], [-.37, 1], [-.5, .5]],
+  [[-.5, 0], [.5, 0], [.32, 1], [-.32, 1]],
+  [[-.36, 0], [.5, 0], [.36, 1], [-.5, 1]]
+];
+
+function blockSlot(index) {
+  const width = 218 - index * 6;
+  const profile = profiles[index % profiles.length];
+  const path = new Path2D();
+  if (profile) {
+    const [[x, y], ...edges] = profile;
+    path.moveTo(x * width, y * blockHeight);
+    edges.forEach(([x, y]) => path.lineTo(x * width, y * blockHeight));
+  } else {
+    path.moveTo(-width / 2, blockHeight);
+    path.lineTo(-width / 2, 0);
+    path.lineTo(width / 2, 0);
+    path.lineTo(width / 2, blockHeight);
+    path.lineTo(width * .2, blockHeight);
+    path.bezierCurveTo(width * .18, 3, -width * .18, 3, -width * .2, blockHeight);
+  }
+  path.closePath();
+  return {x: towerCenter, y: platformTop - (index + 1) * blockHeight, width, path};
+}
+
+function drawBlock(slot, index, lift = 0, crooked = false) {
+  const offset = crooked ? (index % 2 ? -18 : 18) : 0;
   ctx.save();
-  ctx.translate(x, y);
+  ctx.translate(slot.x + offset, slot.y - lift);
   if (crooked) ctx.rotate(.05);
-  rounded(-w / 2, 0, w, h, 6, color, "#15364b72");
-  rounded(-w / 2 + 7, 4, w - 14, 4, 2, "#ffffff72");
-  line([[-w / 2 + 9, h - 5], [w / 2 - 9, h - 5]], "#15364b36", 3);
+  ctx.fillStyle = colors[index % colors.length];
+  ctx.fill(slot.path);
+  ctx.save();
+  ctx.clip(slot.path);
+  rounded(-slot.width / 2 + 7, 4, slot.width - 14, 4, 2, "#ffffff72");
+  line([[-slot.width / 2 + 9, blockHeight - 5], [slot.width / 2 - 9, blockHeight - 5]], "#15364b36", 3);
+  ctx.restore();
+  ctx.strokeStyle = "#15364b72";
+  ctx.lineWidth = 3;
+  ctx.stroke(slot.path);
+  ctx.restore();
+}
+
+function drawTarget(slot) {
+  ctx.save();
+  ctx.translate(slot.x, slot.y);
+  ctx.setLineDash([6, 5]);
+  ctx.strokeStyle = "#164763";
+  ctx.lineWidth = 4;
+  ctx.stroke(slot.path);
+  ctx.strokeStyle = "#f5ffff";
+  ctx.lineWidth = 2;
+  ctx.stroke(slot.path);
   ctx.restore();
 }
 function draw() {
@@ -93,25 +146,19 @@ function draw() {
   rounded(312, 222, 49, 12, 6, "#ffcc40");
   rounded(321, 210, 31, 19, 10, "#ffcc40");
   rounded(287, 293, 102, 12, 6, "#e89419");
-  rounded(512, 581, 276, 22, 5, "#d38338", "#a15d26");
-  const blockHeight = 26;
-  reps.forEach((rep, index) => {
-    const w = 218 - index * 6;
-    block(650 + (rep.onTarget ? 0 : index % 2 ? -18 : 18), 581 - (index + 1) * blockHeight, w, blockHeight, colors[index % colors.length], !rep.onTarget);
-  });
+  rounded(towerCenter - 138, platformTop, 276, 22, 5, "#d38338", "#a15d26");
+  reps.forEach((rep, index) => drawBlock(blockSlot(index), index, 0, !rep.onTarget));
   if (reps.length < (config?.goal ?? 12)) {
-    const slot = 581 - (reps.length + 1) * blockHeight;
-    const y = slot - 14 - (state === "ready" ? 0 : height) * 9;
-    const w = 218 - reps.length * 6;
-    if (state === "raised" || state === "lowering" || state === "auto") {
-      ctx.setLineDash([6, 6]);
-      line([[650 - w / 2, slot + blockHeight], [650 - w / 2, slot], [650 + w / 2, slot], [650 + w / 2, slot + blockHeight]], "#f5ffff", 2);
-      ctx.setLineDash([]);
-    }
-    line([[650, 108], [650, y - 29]], "#344459", 4);
-    line([[650 - w * .3, y], [650, y - 27], [650 + w * .3, y]], "#59412c", 4);
-    rounded(643, y - 35, 14, 14, 7, "#ffd344", "#885119");
-    block(650, y, w, blockHeight, colors[reps.length % colors.length]);
+    const slot = blockSlot(reps.length);
+    const moving = state === "raised" || state === "lowering" || state === "auto";
+    const lift = moving ? height * 9 : 14;
+    const y = slot.y - lift;
+    const grip = slot.width * .17;
+    line([[slot.x, 108], [slot.x, y - 29]], "#344459", 4);
+    line([[slot.x - grip, y], [slot.x, y - 27], [slot.x + grip, y]], "#59412c", 4);
+    rounded(slot.x - 7, y - 35, 14, 14, 7, "#ffd344", "#885119");
+    drawBlock(slot, reps.length, lift);
+    if (moving) drawTarget(slot);
   }
   for (const x of [235, 920]) {
     rounded(x - 18, 599, 36, 8, 3, "#ba4b2c");
@@ -175,7 +222,7 @@ function tick(now) {
     return;
   }
   elapsed = seconds;
-  height = peak * Math.max(.07, 1 - elapsed / (auto ? duration : 3.5));
+  height = peak * Math.max(0, 1 - elapsed / (auto ? duration : config.pace[0]));
   display();
   requestAnimationFrame(tick);
 }
@@ -237,9 +284,7 @@ $("save-form").onsubmit = async event => {
   controls();
   try {
     const pain = $("pain").value;
-    const response = await fetch("/api/sessions", {method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({id: sessionId, pain: pain === "" ? null : Number(pain), reps})});
-    if (!response.ok) throw new Error();
+    await demoData.save({id: sessionId, pain: pain === "" ? null : Number(pain), reps});
     saved = true;
     $("next").textContent = state === "complete" ? "Next level" : "New session";
     $("save-status").textContent = "Saved to the physician portal.";
@@ -269,10 +314,8 @@ $("next").onclick = () => {
   controls();
 };
 draw();
-fetch("/api/config").then(response => {
-  if (!response.ok) throw new Error();
-  return response.json();
-}).then(data => {
+demoData.config().then(({config: data, browserOnly}) => {
+  $("storage-note").hidden = !browserOnly;
   config = data;
   for (const [id, range, unit] of [["height-target", data.height, "cm"], ["pace-target", data.pace, "s"]]) {
     $(id).textContent = range.map(value => value.toFixed(1)).join("–") + " " + unit;

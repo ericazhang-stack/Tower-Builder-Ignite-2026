@@ -144,18 +144,14 @@ function render() {
   else { selected = null; $("detail").hidden = true; }
   drawTrend();
 }
-async function fetchJSON(path) {
-  const response = await fetch(path);
-  if (!response.ok) throw new Error();
-  return response.json();
-}
 async function load() {
   const id = ++request;
   $("status").textContent = "Loading sessions…";
   try {
-    const [settings, records] = await Promise.all([fetchJSON("/api/config"), fetchJSON("/api/sessions")]);
+    const [{config: settings, browserOnly}, records] = await Promise.all([demoData.config(), demoData.sessions()]);
     if (id !== request) return;
     config = settings;
+    $("storage-note").hidden = !browserOnly;
     sessions = records.map(describe);
     $("height-reference").textContent = "Target " + config.height.join("–") + " cm";
     $("pace-reference").textContent = "Target " + config.pace.join("–") + " s";
