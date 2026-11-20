@@ -1,0 +1,39 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physician portal | Tower Builder</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/portal.js" defer></script>
+</head>
+<body class="portal-page">
+<header class="nav"><a class="brand" href="/">▰ <span>Tower Builder</span></a><nav aria-label="Main"><a href="/">Play</a><a aria-current="page" href="/physician">Physician portal</a></nav><span class="demo">Simulation demo</span></header>
+<main class="portal-shell">
+<div class="portal-title"><div><p class="eyebrow">PHYSICIAN PORTAL</p><h1>Rehabilitation progress</h1><p>Fictional patient · Sample history and saved simulator sessions</p></div>
+<button id="refresh" class="secondary">Refresh data</button></div>
+<div class="filters"><label>Time range <select id="range"><option value="all">All sessions</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></label>
+<label>Source <select id="source"><option value="all">All sources</option><option value="sim">Simulator</option><option value="sample">Sample history</option></select></label>
+<p id="status" role="status">Loading sessions…</p></div>
+<section class="summary" aria-label="Summary for selected sessions">
+<article><h2>Sessions</h2><strong id="session-count">—</strong><small id="rep-count"></small></article>
+<article><h2>Mean heel height</h2><strong id="avg-height">—</strong><small id="height-reference"></small></article>
+<article><h2>Mean lowering time</h2><strong id="avg-pace">—</strong><small id="pace-reference"></small></article>
+<article><h2>On target</h2><strong id="target-rate">—</strong><small>Reps meeting both targets</small></article>
+</section>
+<section class="card trend">
+<div class="section-head"><div><h2>Session trends</h2><p>Each point represents one session.</p></div><label>Metric <select id="metric"><option value="height">Mean heel height</option><option value="pace">Mean lowering time</option><option value="target">On-target repetitions</option><option value="consistency">Height variability</option><option value="paceConsistency">Lowering time variability</option><option value="pain">Reported pain</option><option value="count">Completed repetitions</option></select></label></div>
+<canvas id="trend" height="202" role="img" aria-label="Session trend chart. Exact values are listed in the session table."></canvas>
+<div class="chart-legend"><span><i class="sample-dot"></i>Sample history</span><span><i class="sim-dot"></i>Simulator</span><span id="band-key"><i class="band-dot"></i>Demo target range</span></div>
+</section>
+<section class="card">
+<div class="section-head"><div><h2>Session history</h2><p>Select a date to review each repetition.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th scope="col">Date received</th><th scope="col">Source</th><th scope="col">Reps</th><th scope="col">Height mean ± SD</th><th scope="col">Lowering mean ± SD</th><th scope="col">On target</th><th scope="col">Pain / 10</th></tr></thead><tbody id="sessions"></tbody></table></div>
+</section>
+<section class="card" id="detail" hidden>
+<div class="section-head"><div><h2 id="detail-title" tabindex="-1">Repetition details</h2><p id="detail-summary"></p></div><button id="close-detail" class="secondary">Close detail</button></div>
+<div class="table-wrap"><table><thead><tr><th scope="col">Rep</th><th scope="col">Heel height</th><th scope="col">Lowering time</th><th scope="col">Lowering speed</th><th scope="col">Result</th></tr></thead><tbody id="details"></tbody></table></div>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tower Builder</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/game.js" defer></script>
+</head>
+<body class="game-page">
+<header class="nav"><a class="brand" href="/">▰ <span>Tower Builder</span></a><nav aria-label="Main"><a aria-current="page" href="/">Play</a><a href="/physician">Physician portal</a></nav><span class="demo">Simulation demo</span></header>
+<main class="game-shell">
+<section class="stage" aria-label="Tower Builder game">
+<canvas id="scene" width="1200" height="660" aria-hidden="true"></canvas>
+<div class="game-logo" aria-label="Tower Builder"><span>Tower</span><b>Builder</b></div>
+<div class="level"><strong id="level">Level 1</strong><progress id="progress" value="0" max="12" aria-label="Level progress"></progress><span aria-hidden="true">★</span></div>
+<div class="stats">
+<div><i aria-hidden="true">⟳</i><span>Reps<b id="reps">0 / 12</b></span></div>
+<div><i aria-hidden="true">↕</i><span>Heel height<b id="height">0.0 cm</b></span></div>
+<div><i aria-hidden="true">◷</i><span>Lowering<b id="pace">0.0 s</b></span></div>
+</div>
+<div class="gauges">
+<div><strong>Height</strong><div class="gauge-inner"><div role="meter" aria-label="Heel height" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0" class="track" id="height-track"><span></span></div><small>Target<b id="height-target"></b></small></div></div>
+<div><strong>Lowering</strong><div class="gauge-inner"><div role="meter" aria-label="Lowering time" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" class="track" id="pace-track"><span></span></div><small>Target<b id="pace-target"></b></small></div></div>
+</div>
+<p id="feedback" class="feedback" role="status">Ready to build!</p>
+</section>
+<section class="control-panel" aria-label="Simulator controls">
+<div><h1>Build your tower</h1><p id="instruction">Press Raise, then hold Lower until the block lands. Use the up and down arrow keys if you prefer.</p></div>
+<div class="actions">
+<button id="raise" disabled>↑ Raise</button><button id="lower" disabled>↓ Hold to lower</button><button id="simulate" disabled>Auto rep</button>
+<label class="scenario">Rep scenario<select id="scenario"><option value="target">On target</option><option value="fast">Too fast</option><option value="low">Low height</option><option value="slow">Too slow</option></select></label>
+</div>
+<form id="save-form"><label>Demo pain score <select id="pain"><option value="">Not entered</option></select></label><button id="save" disabled>Save session</button><button id="next" type="button" hidden>Next level</button><p id="save-status" role="status"></p></form>
+</section>
+</main>
+</body>
+</html>
